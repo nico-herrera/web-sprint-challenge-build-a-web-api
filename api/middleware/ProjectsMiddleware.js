@@ -5,11 +5,11 @@ module.exports = {
         const {id} = req.params;
         try {
             const project = await Projects.get(id);
-            if (id) {
-              req.project = project;
-              next();
-            } else {
+            if (!id) {
                 next({ message: "project not found", status: 404 });
+            } else {
+                req.project = project;
+                next();
             }
         } catch (err) {
             next({ error: err, message: err.message, status: 500 });
