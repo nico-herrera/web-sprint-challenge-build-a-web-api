@@ -32,8 +32,13 @@ router.put('/:id', ActionsMiddleware.ValidateId, ActionsMiddleware.ValidateBody,
     const {id} = req.params;
     const changes = req.body;
     try {
-        await Actions.update(id, changes);
-        res.status(200).json(changes);
+        if (typeof changes.completed !== "boolean") {
+            res.status(400).json({message: "completed should be true or false"})
+        } else {
+            await Actions.update(id, changes);
+            res.status(200).json(changes);
+        }
+   
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
